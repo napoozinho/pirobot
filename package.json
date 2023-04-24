@@ -1,0 +1,27 @@
+{
+  "name": "pirobot",
+  "version": "1.0.0",
+  "description": "Discord bot de los pibardos",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/napoozinho/pirobot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/napoozinho/pirobot/issues"
+  },
+  "homepage": "https://github.com/napoozinho/pirobot#readme",
+  "dependencies": {
+    "discord.js": "^14.9.0",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22",
+    "openai": "^3.2.1"
+  }
+}
