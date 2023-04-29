@@ -2,14 +2,12 @@
   "name": "pirobot",
   "version": "1.0.0",
   "description": "Discord bot de los pibardos",
-  "type": "module",
+  "type": "commonjs",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc -w",
-    "dev:js": "nodemon --watch \"dist/**\"",
-    "dev": "npm run tsc & npm run dev:js"
-
+    "dev:ts": "tsc -w",
+    "dev:js": "nodemon --watch dist"
   },
   "repository": {
     "type": "git",
