@@ -6,7 +6,10 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "tsc": "tsc -w",
+    "dev:js": "nodemon --watch \"dist/**\"",
+    "dev": "npm run tsc & npm run dev:js"
+
   },
   "repository": {
     "type": "git",
@@ -26,6 +29,7 @@
     "openai": "^3.2.1"
   },
   "devDependencies": {
+    "nodemon": "^2.0.22",
     "typescript": "^5.0.4"
   }
 }
