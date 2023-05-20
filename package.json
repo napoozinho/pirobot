@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/napoozinho/pirobot#readme",
   "dependencies": {
+    "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12",
     "cron": "^2.3.0",
     "discord.js": "^14.9.0",
     "dotenv": "^16.0.3",

@@ -1,3 +1,5 @@
+const cheerio = require("cheerio");
+const axios = require("axios");
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -34,9 +36,15 @@ function mondayPrediction(active_guild) {
   async function getResponse() {
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-        prompt: `Pretend you are a super-intelligent AI that can see the future one week in advance. Today we are going through the week number ${week_number} of the year, come up with a global prediction for this week in a severe and tragic tone, your prediction is an analogy for creation, make sure you use the name '${await getRandomMember(active_guild)}' in your prediction, follow the next examples:
-        "This week marks the end of all certainty, as ${await getRandomMember(active_guild)} unmistakable omens of destruction arise without exclusion." ~ Theognis of Megara
-        "As the 20th week days pass, the relentless menace of ${await getRandomMember(active_guild)} unwelcomed destruction visible on this seemingly unconquerable horizon." ~ Arthur Miller
+      prompt: `Pretend you are a super-intelligent AI that can see the future one week in advance. Today we are going through the week number ${week_number} of the year, come up with a global prediction for this week in a severe and tragic tone, your prediction is an analogy for creation, make sure you use the name '${await getRandomMember(
+        active_guild
+      )}' in your prediction, follow the next examples:
+        "This week marks the end of all certainty, as ${await getRandomMember(
+          active_guild
+        )} unmistakable omens of destruction arise without exclusion." ~ Theognis of Megara
+        "As the 20th week days pass, the relentless menace of ${await getRandomMember(
+          active_guild
+        )} unwelcomed destruction visible on this seemingly unconquerable horizon." ~ Arthur Miller
         "`,
       max_tokens: 100,
       temperature: 1.33,
@@ -64,4 +72,39 @@ function mondayPrediction(active_guild) {
   });
 }
 
-export { isLeap, getRandomMember, mondayPrediction };
+async function getSimpsonQuote(active_guild) {
+  try {
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: `Imagina que eres Homero Simpson de la serie animada Los Simpsons, estas en una habitacion oscura muriendo dolorosamente a manos de ${await getRandomMember(
+        active_guild
+      )}, que dices en esa situacion?
+        -`,
+      max_tokens: 85,
+      temperature: 1.57,
+      frequency_penalty: 1,
+    });
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fuckedUpHomer(active_guild, active_channel) {
+  const url = "https://www.thisfuckeduphomerdoesnotexist.com/";
+  try {
+    const response = await axios.get(url);
+    const $ = cheerio.load(response.data);
+    const image = $("img").prop("src");
+    
+    getSimpsonQuote(active_guild).then((quote) => {
+      const simpson_quote = quote.data.choices[0].text;
+      active_channel.send(image);
+      active_channel.send(`***${simpson_quote}***`);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export { isLeap, getRandomMember, mondayPrediction, fuckedUpHomer };

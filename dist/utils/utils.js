@@ -3,7 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mondayPrediction = exports.getRandomMember = exports.isLeap = void 0;
+exports.fuckedUpHomer = exports.mondayPrediction = exports.getRandomMember = exports.isLeap = void 0;
+const cheerio = require("cheerio");
+const axios = require("axios");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const openai_1 = require("openai");
@@ -65,4 +67,37 @@ function mondayPrediction(active_guild) {
     });
 }
 exports.mondayPrediction = mondayPrediction;
+async function getSimpsonQuote(active_guild) {
+    try {
+        const response = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: `Imagina que eres Homero Simpson de la serie animada Los Simpsons, estas en una habitacion oscura muriendo dolorosamente a manos de ${await getRandomMember(active_guild)}, que dices en esa situacion?
+        -`,
+            max_tokens: 85,
+            temperature: 1.57,
+            frequency_penalty: 1,
+        });
+        return response;
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+async function fuckedUpHomer(active_guild, active_channel) {
+    const url = "https://www.thisfuckeduphomerdoesnotexist.com/";
+    try {
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
+        const image = $("img").prop("src");
+        getSimpsonQuote(active_guild).then((quote) => {
+            const simpson_quote = quote.data.choices[0].text;
+            active_channel.send(image);
+            active_channel.send(`***${simpson_quote}***`);
+        });
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+exports.fuckedUpHomer = fuckedUpHomer;
 //# sourceMappingURL=utils.js.map
