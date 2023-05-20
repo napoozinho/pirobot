@@ -13,11 +13,11 @@ module.exports = {
     //active guild
     const active_guild = interaction.guilds.cache.get(process.env.ACTIVE_GUILD);
     //active general channel
-    let active_general;
+    let active_general_channel;
     for (const channels of active_guild.channels.cache) {
       for (const channel of channels) {
         if (channel.name == "pirobot") {
-          active_general = channel;
+          active_general_channel = channel;
         }
       }
     }
@@ -26,7 +26,7 @@ module.exports = {
     new CronJob(
       "0 8 * * 1", //At 08:00 AM, only on Monday
       () => {
-        mondayPrediction(active_guild);
+        mondayPrediction(active_guild, active_general_channel);
       },
       null,
       true,
@@ -37,7 +37,7 @@ module.exports = {
     new CronJob(
       "11 1 */2 * *", //At 01:11 AM, every 2 days
       () => {
-        fuckedUpHomer(active_guild, active_general);
+        fuckedUpHomer(active_guild, active_general_channel);
       },
       null,
       true,

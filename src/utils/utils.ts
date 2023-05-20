@@ -25,7 +25,7 @@ async function getRandomMember(active_guild) {
   return guild_members[Math.floor(Math.random() * guild_members.length)];
 }
 
-function mondayPrediction(active_guild) {
+function mondayPrediction(active_guild, active_general_channel) {
   const current_date = new Date();
   const start_date = new Date(current_date.getFullYear(), 0, 1);
   const current_date_timestamp = current_date.getTime();
@@ -56,19 +56,11 @@ function mondayPrediction(active_guild) {
   getResponse().then((result) => {
     let week_cap = 52;
     if (isLeap(current_date.getFullYear())) week_cap++;
-    let weekly_channel;
 
     let tick = "```";
     let weekly = `${tick}css\n#week-${week_number}/${week_cap}\n\n["${result.data.choices[0].text}]\n${tick}`;
 
-    for (const channels of active_guild.channels.cache) {
-      for (const channel of channels) {
-        if (channel.name == "pirobot") {
-          weekly_channel = channel;
-        }
-      }
-    }
-    weekly_channel.send(weekly);
+    active_general_channel.send(weekly);
   });
 }
 
@@ -90,7 +82,7 @@ async function getSimpsonQuote(active_guild) {
   }
 }
 
-async function fuckedUpHomer(active_guild, active_channel) {
+async function fuckedUpHomer(active_guild, active_general_channel) {
   const url = "https://www.thisfuckeduphomerdoesnotexist.com/";
   try {
     const response = await axios.get(url);
@@ -99,8 +91,8 @@ async function fuckedUpHomer(active_guild, active_channel) {
     
     getSimpsonQuote(active_guild).then((quote) => {
       const simpson_quote = quote.data.choices[0].text;
-      active_channel.send(image);
-      active_channel.send(`***${simpson_quote}***`);
+      active_general_channel.send(image);
+      active_general_channel.send(`***${simpson_quote}***`);
     });
   } catch (error) {
     console.error(error);
