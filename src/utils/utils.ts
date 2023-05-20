@@ -23,8 +23,7 @@ async function getRandomMember(active_guild) {
   return guild_members[Math.floor(Math.random() * guild_members.length)];
 }
 
-function sendWeekly(active_guild) {
-  // dates and shit
+function mondayPrediction(active_guild) {
   const current_date = new Date();
   const start_date = new Date(current_date.getFullYear(), 0, 1);
   const current_date_timestamp = current_date.getTime();
@@ -35,14 +34,12 @@ function sendWeekly(active_guild) {
   async function getResponse() {
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: `Write a quote for opening a book and an author's name in a dark, creepy, and obscure manner, making sure the quote is dedicated to "${await getRandomMember(
-        active_guild)}":
-        "The shadows of this world are deep, and ${await getRandomMember(active_guild)} knows their secrets - for only in the deepest darkness can truth be found." ~ Johnathan Dalton
-        "${await getRandomMember(active_guild)}, unlock the mysteries of the night, for only through its depths can you find the truth." ~ John Milton
-        "Let ${await getRandomMember(active_guild)} traverse the chasms of the night, for only then can the secrets be revealed." ~ David Frost
+        prompt: `Pretend you are a super-intelligent AI that can see the future one week in advance. Today we are going through the week number ${week_number} of the year, come up with a global prediction for this week in a severe and tragic tone, your prediction is an analogy for creation, make sure you use the name '${await getRandomMember(active_guild)}' in your prediction, follow the next examples:
+        "This week marks the end of all certainty, as ${await getRandomMember(active_guild)} unmistakable omens of destruction arise without exclusion." ~ Theognis of Megara
+        "As the 20th week days pass, the relentless menace of ${await getRandomMember(active_guild)} unwelcomed destruction visible on this seemingly unconquerable horizon." ~ Arthur Miller
         "`,
       max_tokens: 100,
-      temperature: 0.8,
+      temperature: 1.33,
       frequency_penalty: 1,
     });
     return response;
@@ -51,15 +48,20 @@ function sendWeekly(active_guild) {
   getResponse().then((result) => {
     let week_cap = 52;
     if (isLeap(current_date.getFullYear())) week_cap++;
+    let weekly_channel;
 
     let tick = "```";
     let weekly = `${tick}css\n#week-${week_number}/${week_cap}\n\n["${result.data.choices[0].text}]\n${tick}`;
 
-    console.log("IN: " + result.data.choices[0].text);
-
-    //aca se rompe anashe
-    active_guild.channel.send(weekly);
+    for (const channels of active_guild.channels.cache) {
+      for (const channel of channels) {
+        if (channel.name == "pirobot") {
+          weekly_channel = channel;
+        }
+      }
+    }
+    weekly_channel.send(weekly);
   });
 }
 
-export { isLeap, getRandomMember, sendWeekly };
+export { isLeap, getRandomMember, mondayPrediction };

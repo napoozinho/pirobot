@@ -1,5 +1,5 @@
 const { Events } = require("discord.js");
-import { sendWeekly } from "../utils/utils";
+import { mondayPrediction } from "../utils/utils";
 let CronJob = require("cron").CronJob;
 import dotenv from "dotenv";
 dotenv.config();
@@ -10,25 +10,15 @@ module.exports = {
   execute(interaction) {
     console.log(`Ready! Logged in as ${interaction.user.tag}`);
 
-    //intento de obtener guild+text channel weekly
-    async function getWeeklyChannel() {
-      const weekly_guild = await interaction.guilds.fetch()
-      weekly_guild.forEach((guild) => {
-        if (guild.id === process.env.ACTIVE_GUILD) {
-          return guild;
-        }
-      })
-    }
-    getWeeklyChannel().then(console.log)
-
     //quedo mas o menos andando, pero no se como hacer para que se ejecute en el canal de weekly
     const active_guild = interaction.guilds.cache.get(process.env.ACTIVE_GUILD);
 
     new CronJob(
       //make weekly
-      "* * * * *",
+      //"* * * * *",
+      "0 8 * * 1",
       () => {
-        sendWeekly(active_guild);
+        mondayPrediction(active_guild);
       },
       null,
       true,
